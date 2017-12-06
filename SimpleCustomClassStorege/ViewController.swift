@@ -12,7 +12,29 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        //ユーザーデフォルトを呼び出す
+        let ud = UserDefaults.standard
+        //MyDataをインスタンス化
+        let data = MyDate()
+        //プロパティ　valuesStringにtestを代入する
+        data.valuesString = "test"
+        
+        //シリアライズ
+        let archiveData = NSKeyedArchiver.archivedData(withRootObject: data)
+        
+        //ユーザーデフォルトに保存
+        ud.set(archiveData, forKey: "data")
+        ud.synchronize()
+        
+        //デシリアライズ
+        if let storedData = ud.object(forKey: "data") as? Data {
+            if let unarchivedData = NSKeyedUnarchiver.unarchiveObject(with: storedData) as? MyDate {
+                if let valueString = unarchivedData.valuesString {
+                    print (valueString)
+                }
+            }
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
